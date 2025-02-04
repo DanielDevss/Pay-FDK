@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   Usuario                                  */
+/* -------------------------------------------------------------------------- */
+
+model User {
+  id String @id() @default(cuid())
+  firstName String @map("first_name") @db.VarChar(45)
+  lastName String @map("last_name") @db.VarChar(45)
+  username String @unique @db.Char(16)
+  email String @unique @db.VarChar(150)
+  phone String? @db.Char(10)
+  password String @db.VarChar(255)
+  rfc String? @db.Char(13)
+  status EnumUserStatus @default(activo)
+  rol EnumUserRole @default(user)
+  stripeAccountId String? @db.VarChar(155) @map("stripe_account_id")
+  @@map("user")
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                    Enums                                   */
+/* -------------------------------------------------------------------------- */
+
+enum EnumUserRole {
+  user
+  admin
+  root
+}
+
+enum EnumUserStatus {
+  activo
+  suspendido
+  eliminado
+}
