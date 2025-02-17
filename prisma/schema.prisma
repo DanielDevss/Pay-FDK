@@ -29,6 +29,7 @@ model User {
   status EnumUserStatus @default(activo)
   rol EnumUserRole @default(user)
   stripeAccountId String? @db.VarChar(155) @map("stripe_account_id")
+  stripeBankAccountId String? @db.VarChar(155) @map("stripe_bank_account_id")
   @@map("user")
 }
 

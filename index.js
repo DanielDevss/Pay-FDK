@@ -1,17 +1,31 @@
-import { PORT } from "./config.js"
 import webRoutes from "./src/routes/web/index.js"
-
 import express from "express";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
+import fileUpload from "express-fileupload";
+import { PORT } from "./src/config/config.js";
+import cors from "cors"
 
 const app = express();
 
 // Middlewares
-app.use(cookieParser())
+app.use(cors({
+    credentials: true,
+    origin: "http://localhost:5500"
+}
+))
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
 app.use(morgan("combined"))
+app.use(fileUpload({
+    limits : { fileSize: 5 * 1024 * 1024 },
+    abortOnLimit: true,
+    useTempFiles: true,
+    tempFileDir: "/tmp/"
+}))
 
+// Rutas
 app.use("/web", webRoutes)
 
 // Lanzar el servidor
