@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+// Crear un usuario
+
 export const schemeNewUser = z.object({
   firstName: z
     .string({ message: "Debes ingresar un nombre" })
@@ -27,3 +29,34 @@ export const schemeNewUser = z.object({
   message: "Las contraseñas no coinciden",
   path: ["confirmPassword"],
 });
+
+// Completar información de stripe
+
+export const schemeUserStripeComplete = z.object({
+  address: z.object({
+    address: z
+      .string({ message: "Debes agregar una dirección" }),
+    postalCode: z
+      .number({message:"Debes de ingresar un código postal"})
+      .min(10000,"Ingresa los 5 digítos del CP")
+      .max(99999,"Ingresa los 5 digítos del CP"),
+    state: z.string({message: "El campo estado no debe estar vacío"}),
+    city: z.string({ message: "Debes ingresar una ciudad" }),
+    country: z.enum(["MX", "US"], { message: "Debes seleccionar un código de País" })
+  }),
+  dob : z.object({
+    day: z
+      .number({message: "Ingresa el día en número"})
+      .min(1, "El número minimo es 1")
+      .max(31, "El número máximo es 31"),
+    month: z.number("Ingresa el mes en número")
+      .min(1, "El número minimo es 1 (Enero)")
+      .max(12, "El número máximo es 12 (Diciembre)"),
+    year: z.number("Ingresa el año en 4 digítos")
+      .min(1900, "El año minímo es 1900"),
+  }),
+  business: z.object({
+    url: z
+      .string("Ingresa la dirección web de tu negocio").url("Solo se admiten URL's")
+  })
+})
