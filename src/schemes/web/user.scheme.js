@@ -17,8 +17,7 @@ export const schemeNewUser = z.object({
     .email("Debes ingresar un correo válido"),
   phone: z
     .string()
-    .length(10, "Ingresa un teléfono de 10 dígitos")
-    .optional(),
+    .length(10, "Ingresa un teléfono de 10 dígitos"),
   password: z
     .string({ message: "Debes ingresar una contraseña" })
     .min(8, "Mínimo 8 caracteres"),

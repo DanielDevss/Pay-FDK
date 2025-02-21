@@ -146,34 +146,40 @@ export const readUser = async (req, res) => {
  */
 
 export const uploadIdentityFiles = async(req, res) => {
-    const files = req.files;
-    const userId = req.body.userId
 
-    // En caso de no recibir las imagenes
-    if (!files) return res.status(400).json({
-        message: "No se recibieron las imagenes"
-    })
+    try {
 
-    // En caso de que si
-    const front = files.front;
-    const back = files.back;
+        const files = req.files;
+        const userId = req.body.userId
 
-    // Subimos los archivos a stripe
-    const stripeFileFront = await uploadFileAccountService( front )
-    const stripeFileBack = await uploadFileAccountService( back )
+        // En caso de no recibir las imagenes
+        if (!files) return res.status(400).json({
+            message: "No se recibieron las imagenes"
+        })
 
-    console.log(userId)
+        // En caso de que si
+        const front = files.front;
+        const back = files.back;
 
-    // Adjuntar documentos a cuenta de connect
-    const connectUpdated = await accountAddFilesService(userId, stripeFileFront.id, stripeFileBack.id)
-    
-    console.log(connectUpdated)
+        // Subimos los archivos a stripe
+        const stripeFileFront = await uploadFileAccountService( front )
+        const stripeFileBack = await uploadFileAccountService( back )
 
-    
-    res.json({
-        message: "Archivos subidos",
-        data: connectUpdated
-    })
+        console.log(userId)
+
+        // Adjuntar documentos a cuenta de connect
+        const connectUpdated = await accountAddFilesService(userId, stripeFileFront.id, stripeFileBack.id)
+        
+        res.json({
+            message: "Archivos subidos",
+            data: connectUpdated.capabilities
+        })
+    }catch(error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: error.message
+        })
+    }
 }
 
 /**

@@ -121,7 +121,12 @@ export const addBankAccount = async (stripeAccountId, bankAccount) => {
 
 export const getBankAccount = async (stripeBankAccountId, stripeAccountId) => {
     try {
-        return await stripe.accounts.retrieveExternalAccount(stripeAccountId, stripeBankAccountId)
+        const bankData = await stripe.accounts.retrieveExternalAccount(stripeAccountId, stripeBankAccountId)
+        return {
+            bankName: bankData.bank_name,
+            bankAccount: `**************${bankData.last4}`,
+            bankStatus: bankData.status
+        }
     } catch (error) {
         throw new Error(`Error al recuperar la cuenta: ${error.message}`)
     }

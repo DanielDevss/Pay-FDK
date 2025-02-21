@@ -21,13 +21,13 @@ router.delete('/', authenticated, deleteUser);
 
 router.get('/', authenticated, readUser);
 
-router.post('/complete/', authenticated, completeDataConnect);
+router.post('/charges-enable', authenticated, completeDataConnect);
 
-router.post('/bank/', authenticated, addBankAccount);
+router.post('/bank', authenticated, addBankAccount);
 
-router.get('/bank/', authenticated, getBankAccount);
+router.get('/bank', authenticated, getBankAccount);
 
 router.post('/upload-identity-files', authenticated, uploadIdentityFiles)
 
 
-export default router;
+export default router;   

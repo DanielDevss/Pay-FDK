@@ -67,7 +67,11 @@ export const completeUserConnect = async (userId, dob, address, ip, business) =>
         });
 
         // Actualizar información de stripe
-        return await setUserDataStripeAccount({ user, dob, address, stripeAccountId: user.stripeAccountId, ipAddress: ip, business });
+        await setUserDataStripeAccount({ user, dob, address, stripeAccountId: user.stripeAccountId, ipAddress: ip, business })
+
+        return {
+            updated: true
+        }
 
     } catch (error) {
         throw new Error(error.message);
