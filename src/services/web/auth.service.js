@@ -1,4 +1,4 @@
-import prisma from "../../../prisma.js";
+import prisma from "../../../db.js";
 import { verifyPassword } from "../../libs/hash.js";
 import { createJwt } from "../../libs/jwt.js";
 

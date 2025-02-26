@@ -1,6 +1,6 @@
 import fs from "fs"
 
-import prisma from "../../../prisma.js";
+import prisma from "../../../db.js";
 import stripe from "../../config/stripe.js";
 import { addBankAccount, createAccount, getAccountConnect, getBankAccount, setUserDataStripeAccount } from "../../libs/stripeConnect.js";
 

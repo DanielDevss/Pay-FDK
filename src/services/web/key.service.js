@@ -1,4 +1,4 @@
-import prisma from "../../../prisma.js";
+import prisma from "../../../db.js";
 
 /**
  * Generar el key en la DB
