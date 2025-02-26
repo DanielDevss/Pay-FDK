@@ -5,13 +5,16 @@ import { z } from "zod";
 export const schemeNewUser = z.object({
   firstName: z
     .string({ message: "Debes ingresar un nombre" })
+    .min(3, "Minímo 3 carácteres")
     .max(45, "Máximo 45 carácteres"),
-  lastName: z
+    lastName: z
     .string({ message: "Debes ingresar un apellido" })
+    .min(3, "Minímo 3 carácteres")
     .max(45, "Máximo 45 carácteres"),
   rfc: z
     .string({ message: "Debes ingresar un RFC" })
-    .length(13, "Ingresa un RFC de 13 dígitos"),
+    .length(13, "Ingresa un RFC de 13 dígitos")
+    .optional(),
   email: z
     .string({ message: "Debes ingresar un correo" })
     .email("Debes ingresar un correo válido"),

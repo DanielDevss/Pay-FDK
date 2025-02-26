@@ -26,6 +26,7 @@ model User {
   rfc                 String?        @db.Char(13)
   status              EnumUserStatus @default(activo)
   rol                 EnumUserRole   @default(user)
+  documentsSent       Boolean        @default(false) @map("documents_sent")
   stripeAccountId     String?        @map("stripe_account_id") @db.VarChar(155)
   stripeBankAccountId String?        @map("stripe_bank_account_id") @db.VarChar(155)
   keys                UserKey[]          @relation("UserKeys")

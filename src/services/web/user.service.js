@@ -162,3 +162,18 @@ export const accountAddFilesService = async (userId, frontId, backId) => {
         throw new Error(error.message)
     }
 }
+
+
+// ✅ Actualizar identidad enviada
+
+export const accountDocumentsSentsService = async (userId) => {
+    try {
+        return await prisma.user.update({
+            where: { id: userId },
+            data: { documentsSent: true }
+        })
+    } catch (error) {
+        console.log("No se pudo actualzar el estado")
+        throw new Error("No se pudo actualizar el estado en la base de datos")
+    }
+}

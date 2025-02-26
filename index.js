@@ -11,7 +11,8 @@ const app = express();
 // Middlewares
 app.use(cors({
     credentials: true,
-    origin: "http://localhost:5500"
+    origin: "http://localhost:5173",
+    httpOnly: false
 }
 ))
 app.use(express.json())
@@ -34,5 +35,6 @@ app.listen(PORT, (err) => {
         console.error(`Error in running: ${err.message}`);
         return;
     }
+    console.clear()
     console.log(`🚀 Server running on port: ${PORT}`);
 });

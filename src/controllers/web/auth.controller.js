@@ -20,8 +20,9 @@ export const signIn = async (req, res) => {
 
         // Agregamos a cookies
         res.cookie("token", token, {
-            httpOnly: true,
-            sameSite: "Strict"
+            httpOnly: false,
+            secure: true,
+            sameSite: "strict"
         })
 
         // Respondemos
@@ -34,4 +35,13 @@ export const signIn = async (req, res) => {
         }
         res.status(500).json({ message: error.message });
     }
+}
+
+
+/**
+ * LINK Verificar sesion
+ */
+
+export const verifyAuth = async(req, res) => {
+    res.json({data: {verify: true}})
 }

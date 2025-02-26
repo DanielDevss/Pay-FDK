@@ -14,7 +14,11 @@ export const authenticated = async (req,res,next) => {
     
         // Verificar token
         const verifyToken = await verifyJwt(token)
-    
+
+        if(!verifyToken) {
+            throw new Error("Usuario no autenticado");
+        }
+
         // Agregamos el userId al request
         req.body.userId = verifyToken.id
         

@@ -1,7 +1,7 @@
 import { ZodError } from "zod"
 import { formatValidationErrors, generarUsername } from "../../libs/formats.js"
 import { schemeNewUser, schemeUserStripeComplete } from "../../schemes/web/user.scheme.js"
-import { accountAddFilesService, addBankAccountService, completeUserConnect, createUserService, getBankAccountService, getUserService, uploadFileAccountService } from "../../services/web/user.service.js";
+import { accountAddFilesService, accountDocumentsSentsService, addBankAccountService, completeUserConnect, createUserService, getBankAccountService, getUserService, uploadFileAccountService } from "../../services/web/user.service.js";
 import { passwordHash } from "../../libs/hash.js";
 import { schemeNewBankAccount } from "../../schemes/web/bank.scheme.js";
 
@@ -165,14 +165,21 @@ export const uploadIdentityFiles = async(req, res) => {
         const stripeFileFront = await uploadFileAccountService( front )
         const stripeFileBack = await uploadFileAccountService( back )
 
-        console.log(userId)
+        // Actualizar estado de cuenta
+        const userUpdated = await accountDocumentsSentsService(userId)
+        const userUpdateBool = userUpdated ? true : false
+
 
         // Adjuntar documentos a cuenta de connect
         const connectUpdated = await accountAddFilesService(userId, stripeFileFront.id, stripeFileBack.id)
+        const connectUpdateBool = connectUpdated ? true : false
         
         res.json({
-            message: "Archivos subidos",
-            data: connectUpdated.capabilities
+            message: "Archivos subidos y en espera de validación",
+            data: {
+                connectUpdated: connectUpdateBool,
+                userUpdated: userUpdateBool,
+            }
         })
     }catch(error) {
         console.log(error.message)
