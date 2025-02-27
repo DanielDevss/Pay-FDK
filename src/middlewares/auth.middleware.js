@@ -45,7 +45,6 @@ export const authenticatedApi = async(req, res, next) => {
         // Validar que exista la llave en la DB
             
         const key = bearer.split(" ").pop();
-        const userKey = await findKey(key)
 
         if (!userKey || userKey.length == 0) return res.status(401).json({ message: "Unauthorized", status: 401 })
 

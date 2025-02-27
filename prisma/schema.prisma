@@ -54,14 +54,17 @@ model UserKey {
 model Payment {
   id                  String   @id() @default(cuid())
   userId              String   @map("user_id")
-  UserKeyId           String   @map("user_key_id")
+  userKeyId           String   @map("user_key_id")
   stripePaymentIntent String   @unique @map("stripe_payment_intent")
+  clientSecret        String   @unique @map("client_secret")
   amount              String
   status              String
+  successUrl          String   @map("success_url")
+  cancelUrl           String   @map("cancel_url")
   createdAt           DateTime @default(now()) @map("created_at")
   updatedAt           DateTime @updatedAt @map("updated_at")
   user                User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userKey             UserKey  @relation(fields: [UserKeyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userKey             UserKey  @relation(fields: [userKeyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("payments")
 }

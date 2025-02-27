@@ -1,21 +1,16 @@
-import webRoutes from "./src/routes/web/index.js"
+import { corsConfigApi, corsConfigWeb } from "./src/cors/cors.js";
+import { PORT } from "./src/config/config.js";
 import apiRoutes from "./src/routes/api/index.js"
-import express from "express";
-import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import fileUpload from "express-fileupload";
-import { ORIGIN_ALLOW_CORS_URL, PORT } from "./src/config/config.js";
 import cors from "cors"
+import express from "express";
+import fileUpload from "express-fileupload";
+import morgan from "morgan";
+import webRoutes from "./src/routes/web/index.js"
 
 const app = express();
 
 // Middlewares
-app.use(cors({
-    credentials: true,
-    origin: ORIGIN_ALLOW_CORS_URL,
-    httpOnly: false
-}
-))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
@@ -27,9 +22,9 @@ app.use(fileUpload({
     tempFileDir: "/tmp/"
 }))
 
-// Rutas
-app.use("/web", webRoutes)
-app.use("/api", apiRoutes)
+// Configuración de cors e importación de rutas
+app.use('/web', cors(corsConfigWeb), webRoutes)
+app.use('/api', cors(corsConfigApi), apiRoutes)
 
 // Lanzar el servidor
 app.listen(PORT, (err) => {
