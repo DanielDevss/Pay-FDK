@@ -1,4 +1,5 @@
 import webRoutes from "./src/routes/web/index.js"
+import apiRoutes from "./src/routes/api/index.js"
 import express from "express";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
@@ -28,6 +29,7 @@ app.use(fileUpload({
 
 // Rutas
 app.use("/web", webRoutes)
+app.use("/api", apiRoutes)
 
 // Lanzar el servidor
 app.listen(PORT, (err) => {

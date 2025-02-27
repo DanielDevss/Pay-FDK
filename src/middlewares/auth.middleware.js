@@ -1,4 +1,5 @@
 import { verifyJwt } from "../libs/jwt.js"
+import { findKey } from "../services/api/userKey.service.js"
 
 export const authenticated = async (req,res,next) => {
     try {
@@ -29,5 +30,32 @@ export const authenticated = async (req,res,next) => {
         res.status(401).json({
             message: "Usuario no autenticado"
         })        
+    }
+}
+
+
+export const authenticatedApi = async(req, res, next) => {
+    try {
+
+        // Recuperar la llave de Bearer
+
+        const bearer = req.headers.authorization;
+        if(!bearer) return res.status(401).json({ message: "Unauthorized", status: 401 })
+            
+        // Validar que exista la llave en la DB
+            
+        const key = bearer.split(" ").pop();
+        const userKey = await findKey(key)
+
+        if (!userKey || userKey.length == 0) return res.status(401).json({ message: "Unauthorized", status: 401 })
+
+        // Damos por completo la autenticación
+
+        next()
+
+    } catch (error) {
+
+        res.status(401).json({ message: "Unauthorized", status: 401 })
+        
     }
 }
