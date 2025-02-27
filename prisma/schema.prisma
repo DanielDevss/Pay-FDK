@@ -29,7 +29,8 @@ model User {
   documentsSent       Boolean        @default(false) @map("documents_sent")
   stripeAccountId     String?        @map("stripe_account_id") @db.VarChar(155)
   stripeBankAccountId String?        @map("stripe_bank_account_id") @db.VarChar(155)
-  keys                UserKey[]          @relation("UserKeys")
+  keys                UserKey[]      @relation("UserKeys")
+  payments            Payment[]
 
   @@map("users")
 }
@@ -37,18 +38,33 @@ model User {
 // Claves de acceso
 
 model UserKey {
-  id         String   @id() @default(cuid())
-  userId     String   @map("user_id")
-  production Boolean  @default(false)
-  name       String   @db.VarChar(25)
-  key        String   @unique @default(uuid())
-  createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
-  user       User     @relation("UserKeys", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  id         String    @id() @default(cuid())
+  userId     String    @map("user_id")
+  production Boolean   @default(false)
+  name       String    @db.VarChar(25)
+  key        String    @unique @default(uuid())
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  user       User      @relation("UserKeys", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  payments   Payment[]
 
   @@map("user_keys")
 }
 
+model Payment {
+  id                  String   @id() @default(cuid())
+  userId              String   @map("user_id")
+  UserKeyId           String   @map("user_key_id")
+  stripePaymentIntent String   @unique @map("stripe_payment_intent")
+  amount              String
+  status              String
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userKey             UserKey  @relation(fields: [UserKeyId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("payments")
+}
 
 // Enums
 
