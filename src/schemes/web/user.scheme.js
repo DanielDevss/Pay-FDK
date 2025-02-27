@@ -13,8 +13,7 @@ export const schemeNewUser = z.object({
     .max(45, "Máximo 45 carácteres"),
   rfc: z
     .string({ message: "Debes ingresar un RFC" })
-    .length(13, "Ingresa un RFC de 13 dígitos")
-    .optional(),
+    .length(13, "Ingresa un RFC de 13 dígitos"),
   email: z
     .string({ message: "Debes ingresar un correo" })
     .email("Debes ingresar un correo válido"),
@@ -31,6 +30,28 @@ export const schemeNewUser = z.object({
   message: "Las contraseñas no coinciden",
   path: ["confirmPassword"],
 });
+
+// Actualizar usuario
+
+export const schemeUpdateUser = z.object({
+  firstName: z
+    .string({ message: "Debes ingresar un nombre" })
+    .min(3, "Minímo 3 carácteres")
+    .max(45, "Máximo 45 carácteres"),
+  lastName: z
+    .string({ message: "Debes ingresar un apellido" })
+    .min(3, "Minímo 3 carácteres")
+    .max(45, "Máximo 45 carácteres"),
+  rfc: z
+    .string({ message: "Debes ingresar un RFC" })
+    .length(13, "Ingresa un RFC de 13 dígitos"),
+  email: z
+    .string({ message: "Debes ingresar un correo" })
+    .email("Debes ingresar un correo válido"),
+  phone: z
+    .string()
+    .length(10, "Ingresa un teléfono de 10 dígitos"),
+})
 
 // Completar información de stripe
 

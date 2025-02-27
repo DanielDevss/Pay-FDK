@@ -2,7 +2,7 @@ import fs from "fs"
 
 import prisma from "../../../db.js";
 import stripe from "../../config/stripe.js";
-import { addBankAccount, createAccount, getAccountConnect, getBankAccount, setUserDataStripeAccount } from "../../libs/stripeConnect.js";
+import { addBankAccount, createAccount, getAccountConnect, getBankAccount, setUserDataStripeAccount, updateAccount } from "../../libs/stripeConnect.js";
 
 // ✅ Obtener información de la cuenta
 
@@ -56,6 +56,39 @@ export const createUserService = async (data) => {
         throw new Error(error.message);
     }
 }
+
+// ✅ Servicio para actualizar usuario
+
+export const updateUserService = async (userId, data) => {
+    try {
+        // Obtenemos el usuario y stripe_account_id
+        const user = await prisma.user.findFirst({ where: { id: userId } })
+        const stripe_account_id = user.stripeAccountId;
+
+        // Actualizar el account de Stripe
+        const updatedConnectData = await updateAccount(stripe_account_id, data.rfc, data.email, data.firstName, data.lastName, data.phone)
+
+        // Actualizamos el registro en la DB
+        const updatedUserData = await prisma.user.updateMany({
+            where: { id: userId },
+            data: {
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
+                phone: data.phone,
+                rfc: data.rfc
+            }
+        })
+
+        return {
+            userData: updatedUserData ? true : false,
+            connectData: updatedConnectData ? true : false
+        }
+    } catch (error) {
+        throw new Error(error.message)
+    }
+}
+
 
 // ✅ Completar los datos para stripe connect
 

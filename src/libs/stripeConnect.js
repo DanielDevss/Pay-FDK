@@ -39,6 +39,25 @@ export const createAccount = async ({ email }) => {
     }
 }
 
+// ✅ Actualizar cuenta de stripe Connect
+
+export const updateAccount = async(stripeAccountId, rfc, email, firstName, lastName, phone) => {
+    try {
+        return await stripe.accounts.update(stripeAccountId,{
+            email: email,
+            individual: {
+                first_name: firstName,
+                last_name: lastName,
+                email: email,
+                phone: phone,
+                id_number: rfc
+            },
+        })
+    } catch (error) {
+        throw new Error(`Error al actualizar cuenta de stripe: ${error.message}`)
+    }
+}
+
 // ✅ Recopilar información de la cuenta del usuario
 
 export const setUserDataStripeAccount = async ({ user, dob, address, stripeAccountId, ipAddress, business }) => {
@@ -128,6 +147,7 @@ export const getBankAccount = async (stripeBankAccountId, stripeAccountId) => {
             bankStatus: bankData.status
         }
     } catch (error) {
-        throw new Error(`Error al recuperar la cuenta: ${error.message}`)
+        // throw new Error(`No haz ingresado ninguna cuneta de banco`)
+        return null
     }
 }

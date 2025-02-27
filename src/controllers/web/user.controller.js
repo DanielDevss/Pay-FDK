@@ -1,9 +1,10 @@
 import { ZodError } from "zod"
 import { formatValidationErrors, generarUsername } from "../../libs/formats.js"
-import { schemeNewUser, schemeUserStripeComplete } from "../../schemes/web/user.scheme.js"
-import { accountAddFilesService, accountDocumentsSentsService, addBankAccountService, completeUserConnect, createUserService, getBankAccountService, getUserService, uploadFileAccountService } from "../../services/web/user.service.js";
+import { schemeNewUser, schemeUpdateUser, schemeUserStripeComplete } from "../../schemes/web/user.scheme.js"
+import { accountAddFilesService, accountDocumentsSentsService, addBankAccountService, completeUserConnect, createUserService, getBankAccountService, getUserService, updateUserService, uploadFileAccountService } from "../../services/web/user.service.js";
 import { passwordHash } from "../../libs/hash.js";
 import { schemeNewBankAccount } from "../../schemes/web/bank.scheme.js";
+import { response } from "express";
 
 /**
  * LINK Crear usuario
@@ -27,7 +28,7 @@ export const createUser = async (req, res) => {
         const account = await createUserService(data);
 
         // Enviar correo de confirmación
-        res.status(201).json({ message: "Usuario creado", data: account });
+        res.status(201).json({ message: `${data.firstName}, ya puedes iniciar sesión!!`, data: account });
     } catch (error) {
 
         if (error instanceof ZodError) {
@@ -130,6 +131,8 @@ export const readUser = async (req, res) => {
 
         const data = await getUserService(req.body.userId)
 
+        console.log(data)
+
         res.json({
             message: "Información de la cuenta recuperada exitosamente",
             data,
@@ -193,7 +196,36 @@ export const uploadIdentityFiles = async(req, res) => {
  * Actualizar usuario
  */
 export const updateUser = async (req, res) => {
-    res.send("Actualizar usuario")
+
+    try {
+
+        // Validar datos
+        schemeUpdateUser.parse(req.body)
+
+        const userId = req.body.userId
+
+        console.log(userId)
+
+        // Acualizamos los datos
+        await updateUserService(userId, req.body)
+
+        // Retornamos una respuesta
+        res.json({
+            message: `${req.body.firstName}, tu cuenta se ha actualizado correctamente`,
+        })
+    } catch (error) {
+
+        // En caso de que sea un error de ZOD
+        if (error instanceof ZodError) {
+            const formattedErrors = formatValidationErrors(error);
+            return res.status(400).json({ errors: formattedErrors });
+        }
+
+        // En caso de que no sea error de ZOD
+        res.status(500).json({
+            message: error.message
+        })        
+    }
 }
 
 /**
