@@ -7,3 +7,5 @@ export const JWT_SECRET = process.env.JWT_SECRET
 export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY
 
 export const MULTER_UPLOAD_DEST = process.env.MULTER_UPLOAD_DEST || "uploads/"
+
+export const ORIGIN_ALLOW_CORS_URL = process.env.ORIGIN_ALLOW_CORS_URL;

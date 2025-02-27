@@ -3,7 +3,7 @@ import express from "express";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
-import { PORT } from "./src/config/config.js";
+import { ORIGIN_ALLOW_CORS_URL, PORT } from "./src/config/config.js";
 import cors from "cors"
 
 const app = express();
@@ -11,7 +11,7 @@ const app = express();
 // Middlewares
 app.use(cors({
     credentials: true,
-    origin: "http://localhost:5175",
+    origin: ORIGIN_ALLOW_CORS_URL,
     httpOnly: false
 }
 ))
