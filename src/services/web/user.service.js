@@ -21,9 +21,17 @@ export const getUserService = async (userId) => {
 
         // Obtener información de stripe connect
         const account = await getAccountConnect(user.stripeAccountId)
+        const address = {
+            city: account.company.address?.city,
+            address: account.company.address?.line1,
+            postalCode: account.company.address?.postal_code,
+            state: account.company.address?.state,
+            web_url: account.business_profile?.url
+        }
 
         return {
             ...user,
+            address,
             charges_enabled: account.charges_enabled,
             payouts_enabled: account.payouts_enabled
         }

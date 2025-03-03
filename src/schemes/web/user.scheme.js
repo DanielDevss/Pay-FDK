@@ -60,9 +60,7 @@ export const schemeUserStripeComplete = z.object({
     address: z
       .string({ message: "Debes agregar una dirección" }),
     postalCode: z
-      .number({message:"Debes de ingresar un código postal"})
-      .min(10000,"Ingresa los 5 digítos del CP")
-      .max(99999,"Ingresa los 5 digítos del CP"),
+      .string({message:"Debes de ingresar un código postal"}),
     state: z.string({message: "El campo estado no debe estar vacío"}),
     city: z.string({ message: "Debes ingresar una ciudad" }),
     country: z.enum(["MX", "US"], { message: "Debes seleccionar un código de País" })

@@ -25,6 +25,8 @@ router.post('/charges-enable', authenticated, completeDataConnect);
 
 router.post('/bank', authenticated, addBankAccount);
 
+router.put('/bank', authenticated, addBankAccount);
+
 router.get('/bank', authenticated, getBankAccount);
 
 router.post('/upload-identity-files', authenticated, uploadIdentityFiles)

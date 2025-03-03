@@ -7,9 +7,30 @@ import prisma from "../../../db.js";
 
 // TODO Recuperar lista de payments
 
-export const getPaymentsService = async (userKeyId) => {
+export const getPaymentsService = async (userId) => {
   try {
-    return await prisma.payment.findMany({ where: { userKeyId } });
+    const payments_raw = await prisma.payment.findMany({
+      where: { userId },
+      include: {
+        userKey: {
+          select:{ key: true, id: true }
+        }
+      }
+    })
+
+    const payments = payments_raw.map(payment => {
+      return {
+        id: payment.id,
+        userKeyId: payment?.userKey?.id,
+        key: payment?.userKey?.key,
+        amount: payment.amount / 100,
+        status: payment.status,
+        createdAt: payment.createdAt
+      }
+    })
+
+    return payments
+
   } catch (error) {
     throw new Error(error.message);
   }
@@ -26,23 +47,27 @@ export const createPaymentService = async (data) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: STRIPE_CURRENCY,
-      payment_method_type: ["card"],
       application_fee_amount: fee_amount,
       transfer_data: {
         destination: stripeAccountId,
       },
     });
 
-    const { clientSecret, status, id: stripePaymentIntent } = paymentIntent;
+
+    const { client_secret, status, id } = paymentIntent;
 
     // Crear el registro en DB
     const paymentDB = await prisma.payment.create({
       data: {
-        ...data,
-        status,
-        clientSecret,
-        stripePaymentIntent,
-      },
+        userId: data.userId,
+        userKeyId: data.userKeyId,
+        amount: data.amount,
+        cancelUrl: data.cancelUrl,
+        successUrl: data.successUrl,
+        clientSecret: client_secret,
+        stripePaymentIntent: id,
+        status: status,
+      }
     });
 
     return {

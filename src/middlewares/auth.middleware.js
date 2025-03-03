@@ -1,3 +1,4 @@
+import prisma from "../../db.js"
 import { verifyJwt } from "../libs/jwt.js"
 import { findKey } from "../services/api/userKey.service.js"
 
@@ -46,7 +47,17 @@ export const authenticatedApi = async(req, res, next) => {
             
         const key = bearer.split(" ").pop();
 
-        if (!userKey || userKey.length == 0) return res.status(401).json({ message: "Unauthorized", status: 401 })
+        if (!key || key.length == 0) return res.status(401).json({ message: "Unauthorized", status: 401 })
+
+        // Recuperamos el userKey de la DB
+        const userKey = await prisma.userKey.findFirst({ where: { key }, include: { user: true } })
+        if(!userKey) return res.status(401).json({ message: "Unauthorized", status: 401 })
+
+        // Agregamos valores al body
+        req.body.userKeyId = userKey.id
+        req.body.userId = userKey.userId
+        req.body.stripeAccountId = userKey.user.stripeAccountId
+        req.body.stripeBankId = userKey.user.stripeBankAccountId
 
         // Damos por completo la autenticación
 
@@ -54,7 +65,7 @@ export const authenticatedApi = async(req, res, next) => {
 
     } catch (error) {
 
-        res.status(401).json({ message: "Unauthorized", status: 401 })
+        res.status(401).json({ message: "Unauthorized", status: 401, error: error.message })
         
     }
 }

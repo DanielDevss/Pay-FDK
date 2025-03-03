@@ -130,7 +130,6 @@ export const readUser = async (req, res) => {
     try {
 
         const data = await getUserService(req.body.userId)
-
         console.log(data)
 
         res.json({

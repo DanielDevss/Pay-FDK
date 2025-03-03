@@ -6,6 +6,16 @@ export const formatValidationErrors = (errors) => {
 
 }
 
+export const numberToAmount = (number) => {
+    const formatted = new Intl.NumberFormat('MX', {
+       style: "currency",
+       currency: "MXN",
+       maximumFractionDigits: 2,
+       minimumFractionDigits: 2
+    })
+    return formatted.format(number)
+}
+
 export const generarUsername = (nombre) => {
     /// Quitar acentos y caracteres especiales
     nombre = nombre.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
