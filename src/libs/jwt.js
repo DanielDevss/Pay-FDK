@@ -3,7 +3,7 @@ import { JWT_SECRET } from "../config/config.js";
 
 
 export const createJwt = async (payload) => {
-    return await jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+    return await jwt.sign(payload, JWT_SECRET, { expiresIn: '8h' });
 }
 
 export const verifyJwt = async (token) => {

@@ -3,7 +3,7 @@ import { Router } from "express";
 
 const router = Router();
 
-const readFiles = readdirSync(`./src/routes/web`)
+const readFiles = readdirSync(`./src/routes/admin`)
   .map((file) => file.split(".").shift())
   .filter((file) => file !== "index");
 
