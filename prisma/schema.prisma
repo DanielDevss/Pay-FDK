@@ -29,6 +29,8 @@ model User {
   documentsSent       Boolean        @default(false) @map("documents_sent")
   stripeAccountId     String?        @map("stripe_account_id") @db.VarChar(155)
   stripeBankAccountId String?        @map("stripe_bank_account_id") @db.VarChar(155)
+  createdAt           DateTime       @default(now()) @map("created_at")
+  updatedAt           DateTime       @updatedAt @map("updated_at")
   keys                UserKey[]      @relation("UserKeys")
   payments            Payment[]
 
